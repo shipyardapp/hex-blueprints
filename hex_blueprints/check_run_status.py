@@ -48,26 +48,31 @@ def get_run_status(project_id, api_token, run_id):
     """
     url = f'https://app.hex.tech/api/v1/project/{project_id}/run/{run_id}'
     headers = {"Authorization" : f"Bearer {api_token}"}
-    response = requests.get(url= url, headers = headers)
-    status_code = response.status_code
-    response_json = response.json()
-    ## go through the known response codes documented by the HEX api: https://learn.hex.tech/docs/develop-logic/hex-api/overview#404-not-found
-    if status_code == 404:
-        print("Request was not found. Please ensure that you have the proper project id and run id")
-        sys.exit(EXIT_CODE_BAD_REQUEST)
-    elif status_code == 429:
-        print("The number of requests has exceeded the limit, HEX allows 60 requests per minute. Please wait 2 minutes for the limit to reset")
-        sys.exit(EXIT_CODE_EXCESSIVE_REQUESTS)
-    elif status_code == 401:
-        print("Request was unable to be authenticated, please ensure that your API token is entered correctly and that it is not expired.")
-        sys.exit(EXIT_CODE_AUTHENTICATION_ERROR)
-    elif status_code == 500:
-        print("There was a server side error when processing the request, please contact HEX Support at support@hex.tech for continued disturbances")
-        sys.exit(EXIT_CODE_HEX_SERVER_ERROR)
-    elif status_code == 200:
-        return response_json
-    else:
-        print("Unknown error when processing request")
+    try:
+        response = requests.get(url= url, headers = headers)
+        status_code = response.status_code
+        response_json = response.json()
+        ## go through the known response codes documented by the HEX api: https://learn.hex.tech/docs/develop-logic/hex-api/overview#404-not-found
+        if status_code == 404:
+            print("Request was not found. Please ensure that you have the proper project id and run id")
+            sys.exit(EXIT_CODE_BAD_REQUEST)
+        elif status_code == 429:
+            print("The number of requests has exceeded the limit, HEX allows 60 requests per minute. Please wait 2 minutes for the limit to reset")
+            sys.exit(EXIT_CODE_EXCESSIVE_REQUESTS)
+        elif status_code == 401:
+            print("Request was unable to be authenticated, please ensure that your API token is entered correctly and that it is not expired.")
+            sys.exit(EXIT_CODE_AUTHENTICATION_ERROR)
+        elif status_code == 500:
+            print("There was a server side error when processing the request, please contact HEX Support at support@hex.tech for continued disturbances")
+            sys.exit(EXIT_CODE_HEX_SERVER_ERROR)
+        elif status_code == 200:
+            return response_json
+        else:
+            print("Unknown error when processing request")
+            sys.exit(EXIT_CODE_UNKNOWN_ERROR)
+
+    except Exception as e:
+        print(f"Exception occured in handling the request: {e}")
         sys.exit(EXIT_CODE_UNKNOWN_ERROR)
 
 def determine_run_status(run_response):

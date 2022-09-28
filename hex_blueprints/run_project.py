@@ -72,45 +72,49 @@ def run_project(project_id,api_token):
     base_url = 'https://app.hex.tech/api/v1'
     url = f"{base_url}/project/{project_id}/run"
     headers = {"Authorization" : f"Bearer {api_token}"}
-    response = requests.post(url = url,headers=headers)
-    status_code = response.status_code
-    response_json = response.json()
-    ## go through known error cases
+    try:
+        response = requests.post(url = url,headers=headers)
+        status_code = response.status_code
+        response_json = response.json()
+        ## go through known error cases
 
-    ## 404 not found error
-    if status_code == 404:
-        print("Request was not found. Please ensure that you have the proper project id and run id")
-        print("Review the steps in the authorization page to ensure the token and project id are correct")
-        if has_reason(response_json):
-            hex_response = HexResponse(status_code,response_json)
+        ## 404 not found error
+        if status_code == 404:
+            print("Request was not found. Please ensure that you have the proper project id and run id")
+            print("Review the steps in the authorization page to ensure the token and project id are correct")
+            if has_reason(response_json):
+                hex_response = HexResponse(status_code,response_json)
+            else:
+                hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
+        ## 401 Unauthorized error
+        elif status_code == 401:
+            print("Request was unable to be authenticated, please ensure that your API token is entered correctly and that it is not expired.")
+            print("Review the steps in the authorization page to ensure the token and project id are correct")
+            if has_reason(response_json):
+                hex_response = HexResponse(status_code,response_json)
+            else:
+                hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
+        ## 422 unprocessable error
+        elif status_code == 422:
+            print("The request could not be processed by the server")
+            print("Review the steps in the authorization page to ensure the token and project id are correct")
+            if has_reason(response_json):
+                hex_response = HexResponse(status_code,response_json)
+            else:
+                hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
+
+        ## successful post request
+        elif status_code == 201:
+            print("Request was successful")
+            hex_response = HexResponse(status_code,response.json())
+    ## in all other cases not outlined by the api docs, produce an unknown error 
         else:
             hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
-    ## 401 Unauthorized error
-    elif status_code == 401:
-        print("Request was unable to be authenticated, please ensure that your API token is entered correctly and that it is not expired.")
-        print("Review the steps in the authorization page to ensure the token and project id are correct")
-        if has_reason(response_json):
-            hex_response = HexResponse(status_code,response_json)
-        else:
-            hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
-    ## 422 unprocessable error
-    elif status_code == 422:
-        print("The request could not be processed by the server")
-        print("Review the steps in the authorization page to ensure the token and project id are correct")
-        if has_reason(response_json):
-            hex_response = HexResponse(status_code,response_json)
-        else:
-            hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
-
-    ## successful post request
-    elif status_code == 201:
-        print("Request was successful")
-        hex_response = HexResponse(status_code,response.json())
-   ## in all other cases not outlined by the api docs, produce an unknown error 
-    else:
-        hex_response = HexResponse(EXIT_CODE_UNKNOWN_ERROR,{"reason": "unknown"}) ## will return a matching object 
-
-    return hex_response
+        return hex_response
+    ## handle the exception and exit
+    except Exception as e:
+        print(f"Exception occurred: {e}")
+        sys.exit(EXIT_CODE_UNKNOWN_ERROR)
 
 def main():
     args = get_args()
@@ -123,7 +127,6 @@ def main():
     trigger_run = run_project(project_id,api_token)
     status_code = trigger_run.status_code
     response_json = trigger_run.response_json
-
 
     ## create artifacts folder to save runId on success and reason if not successful
     base_folder_name = shipyard.logs.determine_base_artifact_folder('hex')
