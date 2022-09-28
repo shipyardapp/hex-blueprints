@@ -101,16 +101,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# project_id = '0b24ce55-737b-4840-b444-4cc3f8cbd703'
-# api_token = '618853f88bbcbddaf68b96f0fcac5696e73a131f0cef096e6b755fac16a1e3624d4a2923bdfa86ba9689dd8f451de9ec'
-
-# base_url = 'https://app.hex.tech/api/v1'
-# url = f"{base_url}/project/{project_id}/run"
-# headers = {"Authorization" : f"Bearer {api_token}"}
-# response = requests.post(url = url,headers=headers)
-# status_code = response.status_code
-
-# print(response)
-# print(response.json())
-
 
