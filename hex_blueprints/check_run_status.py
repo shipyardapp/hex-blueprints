@@ -6,13 +6,13 @@ import sys
 
 ## error codes 
 
-EXIT_CODE_BAD_REQUEST = 200
+EXIT_CODE_BAD_REQUEST = 206
 EXIT_CODE_INVALID_PROJECT_ID = 201
 EXIT_CODE_INVALID_RUN_ID = 202
 EXIT_CODE_EXCESSIVE_REQUESTS = 203
 EXIT_CODE_HEX_SERVER_ERROR = 204
 EXIT_CODE_AUTHENTICATION_ERROR = 205
-EXIT_CODE_UNKNOWN_ERROR = 299
+EXIT_CODE_UNKNOWN_ERROR = 3
 
 ## run status codes
 ## these are provided here: https://learn.hex.tech/docs/develop-logic/hex-api/api-reference#operation/GetRunStatus
@@ -110,7 +110,6 @@ def main():
 
     response = get_run_status(project_id,api_token,run_id)
     status_exit_code = determine_run_status(response)
-    print(status_exit_code)
     sys.exit(status_exit_code)
 
 if __name__ == '__main__':
