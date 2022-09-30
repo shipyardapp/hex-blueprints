@@ -112,7 +112,7 @@ def run_project(project_id,api_token):
     ## the exception would result in a failure of the post request, this will either be due to an invalid api token or invalid project id
     ## handle the exception and exit
     except Exception as e:
-        print(f"Could not authenticate with API token {api_token}. ProjectID {project_id} matched expected format. Please ensure that you have the correct API token and Project Id from Hex and that the api token is not expired.")
+        print(f"Could not connect to Hex with the provided API token and Project Id. Please ensure that you have the correct API token and Project Id from Hex and that the API token is not expired.")
         sys.exit(ec.EXIT_CODE_AUTHENTICATION_ERROR)
 
 def main():

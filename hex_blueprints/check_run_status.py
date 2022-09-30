@@ -64,7 +64,7 @@ def get_run_status(project_id, api_token, run_id):
             sys.exit(ec.EXIT_CODE_UNKNOWN_ERROR)
 
     except Exception as e:
-        print(f"Could not authenticate with API token {api_token}. ProjectID {project_id} matched expected format. Please ensure that you have the correct API token and Project Id from Hex and that the api token is not expired.")
+        print(f"Could not connect to Hex with the provided API token and Project Id. Please ensure that you have the correct API token and Project Id from Hex and that the API token is not expired.")
         sys.exit(ec.EXIT_CODE_AUTHENTICATION_ERROR)
 
 def determine_run_status(run_response):
