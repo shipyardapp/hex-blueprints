@@ -9,6 +9,8 @@ try:
     import exit_codes as ec
 except BaseException:
     from . import exit_codes as ec
+
+
 @dataclass
 class HexResponse:
     """
