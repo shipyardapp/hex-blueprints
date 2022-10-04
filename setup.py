@@ -13,7 +13,7 @@ for path in Path('./').rglob('requirements.txt'):
 
 
 config = {
-    "description": "Simplified data pipeline blueprints for working with {VENDOR}.",
+    "description": "Simplified data pipeline blueprints for working with Hex.",
     "author": "Shipyard Team",
     "url": "https: // www.shipyardapp.com",
     "author_email": "tech@shipyardapp.com",
